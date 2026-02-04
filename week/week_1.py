@@ -1,17 +1,20 @@
-# week/week_1.py
 import streamlit as st
 import streamlit.components.v1 as components
 
 def render_week_1():
+    # (Optionnel) tentative scroll top — tu peux laisser ou enlever
     components.html(
         """
         <script>
-          window.scrollTo(0, 0);
-          window.parent.scrollTo(0, 0);
+          setTimeout(() => {
+            window.scrollTo(0, 0);
+            window.parent.scrollTo(0, 0);
+          }, 50);
         </script>
         """,
         height=0,
     )
+
     st.title("📅 Projet 3 — Semaine 1 : Cadrage final & Données")
     st.caption(
         "Objectif : données propres, comprises, exploitables. "
@@ -19,6 +22,13 @@ def render_week_1():
     )
 
     st.divider()
+    st.write("Contenu Semaine 1…")
+
+    st.divider()
+    # ✅ Retour
+    if st.button("⬅️ Retour à la roadmap", key="back_to_home"):
+        st.session_state.page = "home"
+        st.rerun()
 
     # -----------------------------
     # 1) Périmètre & période
@@ -155,8 +165,3 @@ Contenu attendu :
 """
     )
 
-    st.divider()
-
-    if st.button("⬅️ Retour à la roadmap", key="back_to_home"):
-        st.session_state.page = "home"
-        st.rerun()

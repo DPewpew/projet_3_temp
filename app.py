@@ -1,6 +1,5 @@
 # streamlit_app.py
 import streamlit as st
-import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Projet 3 — Roadmap (Télécom fixe France)",
@@ -15,23 +14,21 @@ if "page" not in st.session_state:
     st.session_state.page = "home"
 
 # -----------------------------
-# Routeur (DOIT être avant l'affichage de la home)
+# Routeur (DOIT être avant le rendu home)
 # -----------------------------
 if st.session_state.page == "week_1":
     from week.week_1 import render_week_1
     render_week_1()
     st.stop()
-    
-components.html(
-    """
-    <script>
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        window.parent.scrollTo(0, 0);
-      }, 50);
-    </script>
-    """,
-    height=0,
+
+# -----------------------------
+# HOME
+# -----------------------------
+st.title("🗺️ Projet 3 — Roadmap (1 mois)")
+st.caption(
+    "Sujet : étude du marché de l’internet fixe en France (qualité de service, ressenti utilisateur) "
+    "et implications pour un SAV performant et rentable. ML léger : seuils critiques. "
+    "Bonus : simulation + analyse qualitative (nuages de mots)."
 )
 
 # -----------------------------
@@ -93,9 +90,11 @@ with st.expander("Semaine 1 — Cadrage final & Données", expanded=True):
 """
     )
 
+    # ✅ Bouton navigation (valeur EXACTE)
     if st.button("➡️ Ouvrir le détail de la Semaine 1", key="btn_week_1"):
         st.session_state.page = "week_1"
         st.rerun()
+
 
 with st.expander("Semaine 2 — Analyse descriptive & Comparaison", expanded=True):
     st.markdown(
