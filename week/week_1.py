@@ -1,55 +1,60 @@
-# streamlit_week1.py
+# week/week_1.py
 import streamlit as st
+import streamlit.components.v1 as components
 
-st.set_page_config(
-    page_title="Projet 3 — Semaine 1 (Cadrage & Données)",
-    page_icon="📅",
-    layout="centered",
-)
+def render_week_1():
+    components.html(
+        """
+        <script>
+          window.scrollTo(0, 0);
+          window.parent.scrollTo(0, 0);
+        </script>
+        """,
+        height=0,
+    )
+    st.title("📅 Projet 3 — Semaine 1 : Cadrage final & Données")
+    st.caption(
+        "Objectif : données propres, comprises, exploitables. "
+        "Périmètre : SAV télécom **FIXE** (ADSL/VDSL/FTTH) — France — 4 grands opérateurs."
+    )
 
-st.title("📅 Projet 3 — Semaine 1 : Cadrage final & Données")
-st.caption(
-    "Objectif : données propres, comprises, exploitables. "
-    "Périmètre : SAV télécom **FIXE** (ADSL/VDSL/FTTH) — France — 4 grands opérateurs."
-)
+    st.divider()
 
-st.divider()
+    # -----------------------------
+    # 1) Périmètre & période
+    # -----------------------------
+    st.header("1) Périmètre & période")
 
-# -----------------------------
-# 1) Périmètre & période
-# -----------------------------
-st.header("1) Périmètre & période")
-
-st.subheader("🎯 Périmètre (verrouillé)")
-st.markdown(
-    """
+    st.subheader("🎯 Périmètre (verrouillé)")
+    st.markdown(
+        """
 - Analyse centrée sur le **SAV télécom FIXE** (ADSL / VDSL / FTTH)
 - Basée sur des **données publiques agrégées**
 - **Exclusions** : mobile, données opérationnelles internes, données individuelles/personnelles
 """
-)
+    )
 
-st.subheader("📆 Période (verrouillée) : 2021–2024")
-st.markdown(
-    """
+    st.subheader("📆 Période (verrouillée) : 2021–2024")
+    st.markdown(
+        """
 **Justification :** période **post-COVID**, plus représentative des usages stabilisés.  
 La période COVID est exclue car elle correspond à des usages exceptionnels (confinements, télétravail contraint),
 susceptibles de **biaiser** l’analyse.  
 La période 2021–2024 permet d’observer des **évolutions structurelles** (télétravail plus courant) et leurs
 implications sur la qualité perçue et la pression SAV.
 """
-)
+    )
 
-st.divider()
+    st.divider()
 
-# -----------------------------
-# 2) KPI (3–4 max) + méthode de comparaison
-# -----------------------------
-st.header("2) KPI (3–4 max) + approche de comparaison")
+    # -----------------------------
+    # 2) KPI (3–4 max) + méthode de comparaison
+    # -----------------------------
+    st.header("2) KPI (3–4 max) + approche de comparaison")
 
-st.subheader("✅ KPI cibles (SAV FIXE)")
-st.markdown(
-    """
+    st.subheader("✅ KPI cibles (SAV FIXE)")
+    st.markdown(
+        """
 **KPI 1 — Incidents réseau fixe (par opérateur)**  
 - Mesure : fréquence / volumétrie d’incidents sur le fixe  
 - Lecture SAV : plus d’incidents ⇒ plus de sollicitations (appels/tickets/réclamations)
@@ -66,11 +71,11 @@ st.markdown(
 - Mesure : répétition des incidents dans le temps  
 - Lecture SAV : la récurrence génère une pression SAV plus forte qu’un incident isolé
 """
-)
+    )
 
-st.subheader("🔎 Important : comparabilité entre opérateurs")
-st.markdown(
-    """
+    st.subheader("🔎 Important : comparabilité entre opérateurs")
+    st.markdown(
+        """
 Les incidents et les délais **ne sont pas directement comparables “bruts”** entre les 4 opérateurs
 (infrastructures, périmètres, historiques, techno).  
 **Conséquence méthodologique :**
@@ -78,29 +83,29 @@ Les incidents et les délais **ne sont pas directement comparables “bruts”**
 - comparaison = **lecture transversale** (ordres de grandeur, tendances, ruptures), **sans classement**
 - focus sur **distributions** et **quantiles** (p75/p90/p95) plutôt que sur une moyenne unique
 """
-)
+    )
 
-st.divider()
+    st.divider()
 
-# -----------------------------
-# 3) Données (sources) & contrôles qualité
-# -----------------------------
-st.header("3) Données (sources) & contrôles qualité")
+    # -----------------------------
+    # 3) Données (sources) & contrôles qualité
+    # -----------------------------
+    st.header("3) Données (sources) & contrôles qualité")
 
-st.subheader("📌 Critères de sélection des données publiques")
-st.markdown(
-    """
+    st.subheader("📌 Critères de sélection des données publiques")
+    st.markdown(
+        """
 - Source publique identifiable (institution/observatoire/plateforme reconnue)
 - Données **agrégées** (pas d’informations personnelles)
 - Couverture 2021–2024 (ou sous-période cohérente et justifiable)
 - Mesures liées à : **qualité fixe** + **ressenti**
 - Granularité exploitable (mensuel / trimestriel / annuel)
 """
-)
+    )
 
-st.subheader("🧪 Contrôles de cohérence à réaliser à l’import")
-st.markdown(
-    """
+    st.subheader("🧪 Contrôles de cohérence à réaliser à l’import")
+    st.markdown(
+        """
 Checklist minimale :
 - formats de dates cohérents
 - unités homogènes
@@ -108,11 +113,11 @@ Checklist minimale :
 - valeurs manquantes identifiées
 - doublons critiques repérés
 """
-)
+    )
 
-st.subheader("🧼 Nettoyage léger autorisé (Semaine 1)")
-st.markdown(
-    """
+    st.subheader("🧼 Nettoyage léger autorisé (Semaine 1)")
+    st.markdown(
+        """
 - normaliser noms de colonnes
 - convertir dates / numériques
 - harmoniser libellés simples
@@ -120,26 +125,26 @@ st.markdown(
 
 **Interdit (Semaine 1) :** feature engineering, agrégations complexes, ML
 """
-)
+    )
 
-st.divider()
+    st.divider()
 
-# -----------------------------
-# 4) Livrables Semaine 1
-# -----------------------------
-st.header("4) Livrables — fin de Semaine 1")
+    # -----------------------------
+    # 4) Livrables Semaine 1
+    # -----------------------------
+    st.header("4) Livrables — fin de Semaine 1")
 
-st.subheader("📁 Structure du dossier data/")
-st.code(
-    "data/\n"
-    " ├── raw/        # données brutes (inchangées)\n"
-    " ├── cleaned/    # données nettoyées léger\n"
-    " └── README.md   # description + sources + dictionnaire rapide\n"
-)
+    st.subheader("📁 Structure du dossier data/")
+    st.code(
+        "data/\n"
+        " ├── raw/        # données brutes (inchangées)\n"
+        " ├── cleaned/    # données nettoyées léger\n"
+        " └── README.md   # description + sources + dictionnaire rapide\n"
+    )
 
-st.subheader("📝 Note méthodologique (sources, limites, hypothèses)")
-st.markdown(
-    """
+    st.subheader("📝 Note méthodologique (sources, limites, hypothèses)")
+    st.markdown(
+        """
 Contenu attendu :
 - sources utilisées + liens
 - périmètre & exclusions
@@ -148,10 +153,10 @@ Contenu attendu :
 - limites (couverture, granularité, biais potentiels)
 - hypothèses de traitement (normalisation, exclusions de lignes, etc.)
 """
-)
+    )
 
-st.divider()
+    st.divider()
 
-if st.button("⬅️ Retour à la roadmap", key="back_to_home"):
-    st.session_state.page = "home"
-    st.rerun()
+    if st.button("⬅️ Retour à la roadmap", key="back_to_home"):
+        st.session_state.page = "home"
+        st.rerun()

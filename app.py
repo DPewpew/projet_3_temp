@@ -1,9 +1,6 @@
 # streamlit_app.py
 import streamlit as st
-
-
-if "page" not in st.session_state:
-    st.session_state.page = "home"
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Projet 3 — Roadmap (Télécom fixe France)",
@@ -11,6 +8,35 @@ st.set_page_config(
     layout="centered",
 )
 
+# -----------------------------
+# Navigation state
+# -----------------------------
+if "page" not in st.session_state:
+    st.session_state.page = "home"
+
+# -----------------------------
+# Routeur (DOIT être avant l'affichage de la home)
+# -----------------------------
+if st.session_state.page == "week_1":
+    from week.week_1 import render_week_1
+    render_week_1()
+    st.stop()
+    
+components.html(
+    """
+    <script>
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        window.parent.scrollTo(0, 0);
+      }, 50);
+    </script>
+    """,
+    height=0,
+)
+
+# -----------------------------
+# HOME (Roadmap)
+# -----------------------------
 st.title("🗺️ Projet 3 — Roadmap (1 mois)")
 st.caption(
     "Sujet : étude du marché de l’internet fixe en France (qualité de service, ressenti utilisateur) "
@@ -66,11 +92,10 @@ with st.expander("Semaine 1 — Cadrage final & Données", expanded=True):
 - Note méthodologique (sources, limites, hypothèses)
 """
     )
-    # Bouton d'accès à la page détaillée Semaine 1
+
     if st.button("➡️ Ouvrir le détail de la Semaine 1", key="btn_week_1"):
         st.session_state.page = "week_1"
         st.rerun()
-
 
 with st.expander("Semaine 2 — Analyse descriptive & Comparaison", expanded=True):
     st.markdown(
@@ -164,14 +189,3 @@ Le projet est réussi si :
 - Les éléments qualitatifs (nuages de mots / simulation) restent **illustratifs** et ne remplacent pas les constats quantitatifs
 """
 )
-
-# -----------------------------
-# Navigation interne
-# -----------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "home"
-
-if st.session_state.page == "week_1":
-    from week.week_1 import *
-    st.stop()
-
