@@ -10,7 +10,8 @@ st.set_page_config(
 st.title("🗺️ Projet 3 — Roadmap (1 mois)")
 st.caption(
     "Sujet : étude du marché de l’internet fixe en France (qualité de service, ressenti utilisateur) "
-    "et implications pour un SAV performant et rentable. ML léger : seuils critiques."
+    "et implications pour un SAV performant et rentable. ML léger : seuils critiques. "
+    "Bonus : simulation + analyse qualitative (nuages de mots)."
 )
 
 st.divider()
@@ -23,6 +24,7 @@ Livrer une **analyse data claire et défendable** basée sur des **données publ
 - Ressenti utilisateur (réclamations / satisfaction selon sources publiques)
 - Traduction en **principes génériques** d’un SAV performant (**satisfaction + rentabilité**)
 - **ML léger (bonus)** : détection de **seuils critiques** / ruptures d’impact
+- **Bonus (dynamisation)** : **simulation de scénarios SAV** + **scraping de commentaires publics** pour produire des **nuages de mots** (illustratif)
 """
 )
 
@@ -79,10 +81,10 @@ with st.expander("Semaine 2 — Analyse descriptive & Comparaison", expanded=Tru
 """
     )
 
-with st.expander("Semaine 3 — Analyse croisée & ML léger (seuils critiques)", expanded=True):
+with st.expander("Semaine 3 — Analyse croisée & ML léger (seuils critiques) + Bonus qualitatif", expanded=True):
     st.markdown(
         """
-**Objectif :** passer à l’analyse à valeur ajoutée (qualité ↔ ressenti ↔ pression SAV).
+**Objectif :** passer à l’analyse à valeur ajoutée (qualité ↔ ressenti ↔ pression SAV) et illustrer les situations critiques.
 
 **Actions :**
 - Croiser qualité vs ressenti (corrélations/relations simples)
@@ -93,13 +95,20 @@ with st.expander("Semaine 3 — Analyse croisée & ML léger (seuils critiques)"
   - détection de seuils critiques (ruptures d’impact)
 - Interprétation métier orientée SAV (sans interne/opérationnel détaillé)
 
+**Bonus (illustratif, pour dynamiser la restitution) :**
+- **Simulation de scénarios SAV** (ex. “délai long”, “incident répété”, “résolution rapide”) à partir des catégories identifiées
+- **Scraping de commentaires publics** (données accessibles, anonymes, agrégées) liés au **fixe**
+- **Nuages de mots** pour faire ressortir les thèmes/mots récurrents
+- Comparaison **avant / après seuil critique** (ex. vocabulaire associé à un délai > p90)
+
 **Livrables :**
 - 2–3 graphiques analytiques (seuils/ruptures)
 - Seuil(s) critique(s) identifiés + lecture métier
+- **(Bonus)** 1–2 nuages de mots + synthèse des thèmes dominants (illustratif)
 """
     )
 
-with st.expander("Semaine 4 — Restitution & Storytelling", expanded=True):
+with st.expander("Semaine 4 — Restitution & Storytelling (dashboard + narration)", expanded=True):
     st.markdown(
         """
 **Objectif :** produire un rendu pro (dashboard + narration).
@@ -108,6 +117,9 @@ with st.expander("Semaine 4 — Restitution & Storytelling", expanded=True):
 - Construire le dashboard (filtres simples : opérateur, période)
 - Rédiger conclusions & limites (hypothèses explicites)
 - Formaliser **4 principes SAV max** (niveau stratégique/analytique)
+- Intégrer les éléments **bonus** de façon encadrée (onglet/section “Exploratoire”) :
+  - scénarios simulés (lecture pédagogique)
+  - nuages de mots (illustratif, non probant seul)
 - Préparer pitch oral (2–3 minutes) + support
 
 **Livrables :**
@@ -127,7 +139,8 @@ st.markdown(
 - ML léger (bonus) : **~10%**  
 - Restitution : **~20%**  
 
-**Note :** le projet reste valide même si la partie ML est réduite (bonus).
+**Note :** le projet reste valide même si la partie ML est réduite (bonus).  
+**Bonus (simulation + nuages de mots) :** à intégrer uniquement si le socle quanti est solide.
 """
 )
 
@@ -139,5 +152,6 @@ Le projet est réussi si :
 - Les conclusions sont **factuelles** et **défendables**
 - Les limites sont **assumées**
 - Les principes SAV restent **génériques** (pas d’interne opérateur)
+- Les éléments qualitatifs (nuages de mots / simulation) restent **illustratifs** et ne remplacent pas les constats quantitatifs
 """
 )
