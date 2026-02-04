@@ -71,6 +71,7 @@ with st.expander("Semaine 1 — Cadrage final & Données", expanded=True):
         st.session_state.page = "week_1"
         st.rerun()
 
+
 with st.expander("Semaine 2 — Analyse descriptive & Comparaison", expanded=True):
     st.markdown(
         """
@@ -172,4 +173,5 @@ if "page" not in st.session_state:
 
 if st.session_state.page == "week_1":
     from week.week_1 import *
+    st.stop()
 
