@@ -31,16 +31,6 @@ st.caption(
     "Bonus : simulation + analyse qualitative (nuages de mots)."
 )
 
-# -----------------------------
-# HOME (Roadmap)
-# -----------------------------
-st.title("🗺️ Projet 3 — Roadmap (1 mois)")
-st.caption(
-    "Sujet : étude du marché de l’internet fixe en France (qualité de service, ressenti utilisateur) "
-    "et implications pour un SAV performant et rentable. ML léger : seuils critiques. "
-    "Bonus : simulation + analyse qualitative (nuages de mots)."
-)
-
 st.divider()
 
 st.header("🎯 Objectif final")
