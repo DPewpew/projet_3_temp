@@ -1,180 +1,228 @@
-# streamlit_app.py
+# streamlit_app/steam_success_overview.py
+# Page de présentation (1 page) pour formateur — Projet 3 (Steam / Axe 1)
+# L’objectif est d’expliquer le sujet, les données, la méthode et les livrables.
+# (Pas besoin de la DB/ETL ici : c’est une page “pitch”.)
+
 import streamlit as st
 
-st.set_page_config(
-    page_title="Projet 3 — Roadmap (Télécom fixe France)",
-    page_icon="🗺️",
-    layout="centered",
-)
+st.set_page_config(page_title="Projet 3 — Steam | Facteurs de succès", layout="wide")
 
 # -----------------------------
-# Navigation state
+# Header
 # -----------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "home"
+st.title("Projet 3 — Analyse des facteurs du succès commercial sur Steam")
+st.caption("Périmètre : analyse globale (post-lancement) + modèle explicable — délai : 20 jours")
 
-# -----------------------------
-# Routeur (DOIT être avant le rendu home)
-# -----------------------------
-if st.session_state.page == "week_1":
-    from week.week_1 import render_week_1
-    render_week_1()
-    st.stop()
-
-# -----------------------------
-# HOME
-# -----------------------------
-st.title("🗺️ Projet 3 — Roadmap (1 mois)")
-st.caption(
-    "Sujet : étude du marché de l’internet fixe en France (qualité de service, ressenti utilisateur) "
-    "et implications pour un SAV performant et rentable. ML léger : seuils critiques. "
-    "Bonus : simulation + analyse qualitative (nuages de mots)."
-)
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.metric("Axe", "Facteurs de succès", help="Axe 1 : succès commercial (owners estimés)")
+with c2:
+    st.metric("Cible", "estimated_owners", help="Transformée en valeur numérique + label succès (top 30%)")
+with c3:
+    st.metric("ML", "Logistic Regression", help="Modèle simple et interprétable (coefficients)")
 
 st.divider()
 
-st.header("🎯 Objectif final")
-st.markdown(
-    """
-Livrer une **analyse data claire et défendable** basée sur des **données publiques réelles** :
-- Qualité de service **fixe** (incidents, délais de rétablissement…)
-- Ressenti utilisateur (réclamations / satisfaction selon sources publiques)
-- Traduction en **principes génériques** d’un SAV performant (**satisfaction + rentabilité**)
-- **ML léger (bonus)** : détection de **seuils critiques** / ruptures d’impact
-- **Bonus (dynamisation)** : **simulation de scénarios SAV** + **scraping de commentaires publics** pour produire des **nuages de mots** (illustratif)
-"""
-)
+# -----------------------------
+# Contexte & objectifs
+# -----------------------------
+left, right = st.columns([1.2, 1])
 
-st.header("📦 Livrables attendus — couverture")
-st.markdown(
-    """
-- ✅ Scripts de collecte / extraction  
-- ✅ Pipeline de nettoyage & prétraitement  
-- ✅ ETL opérationnel (version Data Analyst : Extract → Transform → Load vers SQLite/Postgres)  
-- ✅ Base de données optimisée & documentée  
-- ✅ Tableaux de bord interactifs  
-- ✅ Interface utilisateur simple & intuitive (dashboard Streamlit)  
-- ✅ Documentation technique + guide utilisateur
-"""
-)
-
-st.divider()
-
-st.header("🗓️ Roadmap détaillée (4 semaines)")
-
-with st.expander("Semaine 1 — Cadrage final & Données", expanded=True):
-    st.markdown(
+with left:
+    st.subheader("Contexte & problématique")
+    st.write(
         """
-**Objectif :** données propres, comprises, exploitables.
+**Problématique :** *Quels facteurs influencent le succès commercial d’un jeu sur Steam ?*
 
-**Actions :**
-- Valider : périmètre (fixe), période, KPI (3–4 max)
-- Identifier les jeux de données publics (qualité + ressenti)
-- Télécharger / importer les fichiers (CSV/XLS)
-- Vérifier cohérence (dates, opérateurs, unités, valeurs manquantes)
-- Premier nettoyage léger (normalisation & formats)
-
-**Livrables :**
-- Dossier `data/` structuré
-- Note méthodologique (sources, limites, hypothèses)
+Le projet vise à :
+- identifier les variables les plus associées à un grand volume d’owners (estimation),
+- construire un pipeline reproductible (nettoyage → features → label),
+- produire un dashboard et un modèle explicable pour appuyer l’analyse.
 """
     )
 
-    # ✅ Bouton navigation (valeur EXACTE)
-    if st.button("➡️ Ouvrir le détail de la Semaine 1", key="btn_week_1"):
-        st.session_state.page = "week_1"
-        st.rerun()
-
-
-with st.expander("Semaine 2 — Analyse descriptive & Comparaison", expanded=True):
-    st.markdown(
+with right:
+    st.subheader("Définition du succès")
+    st.write(
         """
-**Objectif :** comprendre ce que disent les données (constats factuels).
-
-**Actions :**
-- Calcul des KPI clés (incidents, délais, ressenti)
-- Visualisations simples :
-  - évolutions temporelles
-  - comparaisons entre opérateurs (sans classement)
-- Extraction des constats (faits + ordres de grandeur)
-
-**Livrables :**
-- 4–5 graphiques clairs
-- Liste de constats factuels (sans jugement)
-"""
-    )
-
-with st.expander("Semaine 3 — Analyse croisée & ML léger (seuils critiques) + Bonus qualitatif", expanded=True):
-    st.markdown(
-        """
-**Objectif :** passer à l’analyse à valeur ajoutée (qualité ↔ ressenti ↔ pression SAV) et illustrer les situations critiques.
-
-**Actions :**
-- Croiser qualité vs ressenti (corrélations/relations simples)
-- Identifier les situations à fort impact (délais longs, incidents récurrents)
-- **ML léger (Option C) :**
-  - quantiles (p75/p90/p95)
-  - outliers / distributions
-  - détection de seuils critiques (ruptures d’impact)
-- Interprétation métier orientée SAV (sans interne/opérationnel détaillé)
-
-**Bonus (illustratif, pour dynamiser la restitution) :**
-- **Simulation de scénarios SAV** (ex. “délai long”, “incident répété”, “résolution rapide”) à partir des catégories identifiées
-- **Scraping de commentaires publics** (données accessibles, anonymes, agrégées) liés au **fixe**
-- **Nuages de mots** pour faire ressortir les thèmes/mots récurrents
-- Comparaison **avant / après seuil critique** (ex. vocabulaire associé à un délai > p90)
-
-**Livrables :**
-- 2–3 graphiques analytiques (seuils/ruptures)
-- Seuil(s) critique(s) identifiés + lecture métier
-- **(Bonus)** 1–2 nuages de mots + synthèse des thèmes dominants (illustratif)
-"""
-    )
-
-with st.expander("Semaine 4 — Restitution & Storytelling (dashboard + narration)", expanded=True):
-    st.markdown(
-        """
-**Objectif :** produire un rendu pro (dashboard + narration).
-
-**Actions :**
-- Construire le dashboard (filtres simples : opérateur, période)
-- Rédiger conclusions & limites (hypothèses explicites)
-- Formaliser **4 principes SAV max** (niveau stratégique/analytique)
-- Intégrer les éléments **bonus** de façon encadrée (onglet/section “Exploratoire”) :
-  - scénarios simulés (lecture pédagogique)
-  - nuages de mots (illustratif, non probant seul)
-- Préparer pitch oral (2–3 minutes) + support
-
-**Livrables :**
-- Dashboard final
-- Documentation (technique + guide utilisateur)
-- Synthèse conclusions (actionnable, non technique)
+- `estimated_owners` est fourni sous forme d’intervalle (ex: `"0 - 20000"`).
+- Transformation en **valeur numérique** (milieu de l’intervalle).
+- Création d’un **label binaire** :
+  - **Succès = 1** si owners > **percentile 70** (Top 30%)
+  - **Succès = 0** sinon
 """
     )
 
 st.divider()
 
-st.header("📊 Répartition de l’effort (réaliste)")
-st.markdown(
-    """
-- Données & nettoyage : **~30%**  
-- Analyse : **~40%**  
-- ML léger (bonus) : **~10%**  
-- Restitution : **~20%**  
+# -----------------------------
+# Sources de données
+# -----------------------------
+st.subheader("Données & sources")
 
-**Note :** le projet reste valide même si la partie ML est réduite (bonus).  
-**Bonus (simulation + nuages de mots) :** à intégrer uniquement si le socle quanti est solide.
+colA, colB = st.columns([1.4, 1])
+with colA:
+    st.write(
+        """
+**Dataset principal :** Steam Games Dataset (FronkonGames)  
+- MAJ régulière (scraper)  
+- Contenu : métadonnées store + signaux de marché et engagement.
+
+**Pourquoi ce choix :**
+- Données publiques, volumineuses, riches en variables
+- Colonne de succès exploitable (`estimated_owners`)
+- Variables explicatives directement utilisables (prix, avis, tags, genres, CCU, temps de jeu, etc.)
+"""
+    )
+
+with colB:
+    st.info(
+        """
+**Entrées principales exploitées (exemples)**
+- Prix : `price`, `is_free`
+- Réception : `positive`, `negative`, `user_score`, `metacritic_score`
+- Engagement : `average_playtime_forever`, `peak_ccu`, `achievements`
+- Contenu : `genres`, `categories`, `tags`
+- Plateformes : `windows`, `mac`, `linux`
+- Temps : `release_date`
+""".strip()
+    )
+
+st.divider()
+
+# -----------------------------
+# Méthode (ETL / DB / Viz / ML)
+# -----------------------------
+st.subheader("Méthode (workflow Projet 3)")
+
+m1, m2, m3, m4 = st.columns(4)
+
+with m1:
+    st.markdown("### 1) Acquisition")
+    st.write(
+        """
+- Téléchargement dataset (Kaggle/GitHub)
+- Stockage **raw**
+- Contrôle schéma & volume
+"""
+    )
+
+with m2:
+    st.markdown("### 2) Nettoyage")
+    st.write(
+        """
+- Parsing dates, prix
+- Conversion `estimated_owners` → numérique
+- Ratios : `positive_ratio`
+- Normalisation champs multi-values
+"""
+    )
+
+with m3:
+    st.markdown("### 3) Infra données")
+    st.write(
+        """
+- ETL reproductible (scripts)
+- PostgreSQL (tables simples + tables multi-valeurs)
+- Data mart pour dashboards
+"""
+    )
+
+with m4:
+    st.markdown("### 4) Analyse & ML")
+    st.write(
+        """
+- KPI & corrélations
+- Visualisations interactives
+- Logistic Regression (explicable)
+- Interprétation des coefficients
+"""
+    )
+
+st.divider()
+
+# -----------------------------
+# KPI proposés (dashboard)
+# -----------------------------
+st.subheader("KPI & visualisations prévues")
+
+k1, k2 = st.columns(2)
+with k1:
+    st.markdown("#### KPI Marché")
+    st.write(
+        """
+- Répartition des owners (log scale)
+- Succès par **tranches de prix**
+- Succès par **année de sortie**
+- Succès par **plateforme** (Win/Mac/Linux)
+"""
+    )
+
+with k2:
+    st.markdown("#### KPI Produit / Réception / Engagement")
+    st.write(
+        """
+- `positive_ratio` vs succès
+- Metacritic vs succès
+- `peak_ccu` vs owners
+- `average_playtime_forever` vs succès
+- Genres/tags les plus associés au succès
+"""
+    )
+
+st.divider()
+
+# -----------------------------
+# Cadrage ML (simple & explicable)
+# -----------------------------
+st.subheader("Modélisation (simple, explicable)")
+
+st.write(
+    """
+**Objectif ML :** estimer la probabilité qu’un jeu soit dans le **Top 30%** (owners).  
+**Modèle :** Logistic Regression (baseline robuste, interprétable).  
+**Évaluation :** Accuracy + Precision/Recall + matrice de confusion.  
+**Interprétation :** coefficients → variables qui augmentent/diminuent la probabilité de succès.
 """
 )
 
-st.header("✅ Critères de réussite")
-st.markdown(
+st.warning(
+    "Note méthodologique : certaines features (avis, peak_ccu, playtime) sont post-lancement. "
+    "Le projet est cadré en **analyse des facteurs globaux** (pas une prédiction avant sortie)."
+)
+
+st.divider()
+
+# -----------------------------
+# Planning 20 jours
+# -----------------------------
+st.subheader("Planning (20 jours)")
+
+st.write(
     """
-Le projet est réussi si :
-- Les graphiques racontent une histoire **compréhensible par un non-tech**
-- Les conclusions sont **factuelles** et **défendables**
-- Les limites sont **assumées**
-- Les principes SAV restent **génériques** (pas d’interne opérateur)
-- Les éléments qualitatifs (nuages de mots / simulation) restent **illustratifs** et ne remplacent pas les constats quantitatifs
+- **J1–J3** : EDA + définition de la cible + nettoyage owners  
+- **J4–J7** : feature engineering + dataset clean + contrôles qualité  
+- **J8–J11** : ETL + base PostgreSQL + tables normalisées (genres/tags)  
+- **J12–J15** : dashboard Streamlit (KPI + filtres + vues)  
+- **J16–J18** : ML (LogReg) + interprétation + reporting  
+- **J19–J20** : finalisation, doc, slides, répétition
 """
 )
+
+st.divider()
+
+# -----------------------------
+# Livrables
+# -----------------------------
+st.subheader("Livrables attendus")
+st.write(
+    """
+- Scripts **ETL** (extract / transform / load)
+- Base **PostgreSQL** (schéma + data mart)
+- Dashboard **Streamlit** (KPI + exploration)
+- Notebook / module **ML** (Logistic Regression + interprétation)
+- Documentation (README + dictionnaire de données)
+"""
+)
+
+st.caption("Page de cadrage : destinée à valider le sujet, l’axe, les sources et le plan avant implémentation complète.")
