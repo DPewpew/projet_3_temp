@@ -1,118 +1,97 @@
-# Data — Projet 3 (Télécom fixe France)
+🎮 Projet 3 – Analyse du succès des jeux Steam
+📌 Objectif
 
-## Périmètre
-- Sujet : Service après-vente (SAV) des opérateurs télécoms — **FIXE uniquement** (ADSL / VDSL / FTTH)
-- Période étudiée : **2021–2024** (post-COVID)
-- Données : **publiques, agrégées, externes**
-- Zone : France
-- Exclusions : mobile, données opérationnelles internes, données individuelles/personnelles
+Analyser les facteurs expliquant le succès d’un jeu sur Steam en utilisant :
 
----
+Analyse descriptive
 
-## Inventaire des sources
+Construction d’indicateurs clés
 
-### Source 1 — Observatoire des communications électroniques
-- Producteur : ARCEP (via data.gouv.fr)
-- Type : **Quantitatif structurant** (marché fixe, indicateurs par opérateur)
-- Période couverte : 2021–2024 (selon indicateurs)
-- Granularité :
-  - temporelle : annuelle / trimestrielle
-  - analytique : **par opérateur**
-- Variables clés :
-  - indicateurs liés au marché de l’internet fixe
-  - métriques publiées par opérateur
-- KPI couverts :
-  - socle quantitatif par opérateur (proxy qualité / pression SAV)
-- Lien :
-  - https://www.data.gouv.fr/datasets/observatoire-des-communications-electroniques
-- Limites connues :
-  - pas de données d’incidents techniques brutes
-  - pas de délais de rétablissement
-  - indicateurs parfois indirects vis-à-vis du SAV
+Validation via modèle ML explicatif
 
----
+🔄 Pipeline de données
+1️⃣ Extract
 
-### Source 2 — Marché du haut et très haut débit fixe (déploiements)
-- Producteur : ARCEP (via data.gouv.fr)
-- Type : **Contexte technique / infrastructure**
-- Période couverte : 2021–2024 (selon jeux)
-- Granularité :
-  - géographique : commune / département / région
-- Variables clés :
-  - déploiements FTTH / THD
-  - couverture et éligibilité
-- KPI couverts :
-  - aucun KPI SAV direct
-  - indicateurs de contexte réseau
-- Lien :
-  - https://www.data.gouv.fr/datasets/le-marche-du-haut-et-tres-haut-debit-fixe-deploiements
-- Limites connues :
-  - pas de données par opérateur exploitables pour le SAV
-  - pas d’incidents ni de délais
+Les données proviennent du dataset Kaggle :
 
----
+Steam Games Dataset
+https://www.kaggle.com/datasets/fronkongames/steam-games-dataset/data
 
-### Source 3 — Observatoire de la satisfaction client
-- Producteur : ARCEP
-- Type : **Ressenti utilisateur / proxy SAV**
-- Période couverte : dernières éditions disponibles (incluant la période récente)
-- Granularité :
-  - analytique : **par opérateur**
-- Variables clés :
-  - indicateurs de satisfaction client
-  - perception de la qualité de service et de la relation client
-- KPI couverts :
-  - ressenti utilisateur (proxy de pression SAV)
-- Lien :
-  - https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/satisfaction-client/observatoire-de-la-satisfaction-client-edition-2025.html
-- Limites connues :
-  - données principalement sous voir forme de graphiques / indicateurs agrégés
-  - pas de fichiers CSV/XLS systématiquement disponibles
-  - pas de mesure directe d’incidents ou de délais techniques
+Téléchargement manuel puis stockage dans :
 
----
+data/raw/
 
-### Source 4 — API contexte réseau fixe (optionnelle)
-- Producteur : source open data spécialisée
-- Type : Contexte réseau (technologies, débits, zones)
-- Période couverte : variable selon endpoints
-- Granularité :
-  - géographique (commune / département / région)
-- Variables clés :
-  - technologies d’accès
-  - classes de débits
-- KPI couverts :
-  - aucun KPI SAV direct
-- Limites connues :
-  - pas de données par opérateur
-  - usage limité à l’enrichissement contextuel
+2️⃣ Transform
 
----
+Script principal :
 
-## Hypothèses de traitement (Semaine 1)
-- Normalisation des noms de colonnes
-- Conversion des dates et valeurs numériques dans des formats exploitables
-- Harmonisation des libellés opérateurs
-- Gestion des valeurs manquantes :
-  - conservation si non bloquant
-  - exclusion documentée si critique
-- Exclusions :
-  - lignes hors période 2021–2024
-  - indicateurs non liés au fixe
+scripts/transform.py
 
----
 
-## Limites & biais
-- **Absence de données publiques brutes** sur :
-  - incidents réseau fixe
-  - pannes
-  - délais de rétablissement / d’intervention  
-  (données non publiées pour des raisons de sécurité et de confidentialité des infrastructures)
-- Analyse reposant sur :
-  - indicateurs agrégés officiels
-  - proxies SAV (ressenti utilisateur, contexte réseau)
-- Comparabilité inter-opérateurs :
-  - analyse par opérateur
-  - **sans classement**
-- Granularités hétérogènes :
-  - temporelles et géographiques différentes selon les sources
+Étapes réalisées :
+
+Nettoyage des valeurs manquantes
+
+Suppression des incohérences
+
+Création des variables :
+
+positive_ratio
+
+peak_ccu
+
+playtime
+
+recommendations
+
+Production de :
+
+data/cleaned/games_clean.csv
+data/cleaned/games_clean_sql.csv
+data/cleaned/games_clean.parquet
+
+3️⃣ Load
+
+Import dans PostgreSQL effectué manuellement via pgAdmin à partir de :
+
+games_clean_sql.csv
+
+
+La base sert ensuite à :
+
+Analyse SQL
+
+Visualisation Power BI
+
+🛠 Stack technique
+
+Python (Pandas / NumPy)
+
+PostgreSQL
+
+Power BI
+
+Scikit-learn
+
+Git
+
+📊 Méthodologie analytique
+
+Le projet repose sur :
+
+Analyse des indicateurs clés
+
+Définition d’un seuil de succès
+
+Modèle ML explicatif (validation des corrélations)
+
+Le modèle n’est pas prédictif avant sortie.
+Il sert à confirmer les résultats de l’analyse descriptive.
+
+⚠️ Remarques techniques
+
+Les données brutes ne sont pas versionnées (taille importante)
+
+L’import en base est réalisé manuellement
+
+Le projet se concentre sur l’analyse et la structuration des données
