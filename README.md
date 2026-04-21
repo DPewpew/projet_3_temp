@@ -1,97 +1,195 @@
-🎮 Projet 3 – Analyse du succès des jeux Steam
-📌 Objectif
+# 🎮 Analyse du Succès des Jeux Steam
 
-Analyser les facteurs expliquant le succès d’un jeu sur Steam en utilisant :
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-316192)
+![PowerBI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-ML-orange)
+![Status](https://img.shields.io/badge/Status-Terminé-brightgreen)
 
-Analyse descriptive
+> Analyse des facteurs expliquant le succès d'un jeu sur Steam — pipeline ETL complet, modélisation PostgreSQL, dashboard Power BI interactif et validation par modèle ML.
 
-Construction d’indicateurs clés
+---
 
-Validation via modèle ML explicatif
+## À propos
 
-🔄 Pipeline de données
-1️⃣ Extract
+Ce projet a été réalisé dans le cadre de ma **formation Data Analyst**. Il illustre un pipeline de données end-to-end : extraction depuis Kaggle, transformation en Python, modélisation et chargement en base PostgreSQL via des scripts SQL, analyse et visualisation Power BI, et validation des résultats via un modèle de machine learning.
 
-Les données proviennent du dataset Kaggle :
+Il fait partie de mon portfolio GitHub, conçu pour montrer les compétences acquises tout au long de ma formation.
 
-Steam Games Dataset
-https://www.kaggle.com/datasets/fronkongames/steam-games-dataset/data
+> 👤 **[Mon profil GitHub →](https://github.com/DPewpew)**
 
-Téléchargement manuel puis stockage dans :
+---
 
-data/raw/
+## Sommaire
 
-2️⃣ Transform
+- [Objectif](#objectif)
+- [Résultats clés](#résultats-clés)
+- [Structure du projet](#structure-du-projet)
+- [Pipeline de données](#pipeline-de-données)
+- [Modélisation SQL](#modélisation-sql)
+- [Dashboard Power BI](#dashboard-power-bi)
+- [Installation](#installation)
+- [Stack technique](#stack-technique)
+- [Remarques techniques](#remarques-techniques)
 
-Script principal :
+---
 
-scripts/transform.py
+## Objectif
 
+Identifier et quantifier les facteurs qui expliquent le succès d'un jeu sur Steam, défini par un seuil de **100 000 propriétaires** (soit 8,73 % des jeux du catalogue).
 
-Étapes réalisées :
+L'analyse repose sur trois axes :
+1. **Analyse descriptive** du marché et des indicateurs clés
+2. **Identification des facteurs de succès** (genre, langue, plateforme, avis)
+3. **Validation ML** pour confirmer les corrélations identifiées
 
-Nettoyage des valeurs manquantes
+---
 
-Suppression des incohérences
+## Résultats clés
 
-Création des variables :
+| Indicateur | Valeur |
+|------------|--------|
+| Jeux analysés | ~101 000 |
+| Jeux considérés comme succès (100K+ owners) | 8 815 — 8,73 % du catalogue |
+| Croissance des sorties Steam 2013 → 2025 | +3 191 % |
+| Meilleur genre (taux de succès) | Massively Multiplayer — 22,96 % |
+| Avis positifs moyens d'un jeu à succès | 85,6 % (+5,3 pts vs échec) |
+| Langues moyennes d'un jeu à succès | 7,4 langues (1,7× plus que les autres) |
+| Plateformes moyennes d'un jeu à succès | 1,55 vs 1,31 pour les échecs |
 
-positive_ratio
+---
 
-peak_ccu
+## Structure du projet
 
-playtime
+```
+├── data/
+│   ├── raw/                               # Données brutes Kaggle (non versionnées)
+│   ├── cleaned/                           # Données nettoyées — format Python
+│   └── cleaned_csv/                       # Versions CSV prêtes pour PostgreSQL
+│
+├── sql/
+│   ├── create_schema_v1.sql               # Création du schéma relationnel
+│   ├── fix_language.sql                   # Correction des langues en base
+│   ├── fix_publishers.sql                 # Correction des éditeurs en base
+│   ├── load_dims_and_bridges_v1.sql       # Chargement dimensions & tables de liaison
+│   └── load_fix_publishers.sql            # Correctif chargement éditeurs
+│
+├── scripts/
+│   ├── transform.py                       # Pipeline nettoyage v1
+│   ├── transform_v2.py                    # Pipeline nettoyage v2 (final)
+│   ├── fix_language.py                    # Correction des langues
+│   ├── fix_publishers.py                  # Correction des éditeurs
+│   ├── export_postgres_ready.py           # Export PostgreSQL v1
+│   ├── export_postgres_ready_v2.py        # Export PostgreSQL v2 (final)
+│   ├── export_fix_language.py             # Export correctif langues
+│   └── export_fix_publishers.py           # Export correctif éditeurs
+│
+├── power_bi/
+│   └── analyse_steam_v2.pbix              # Dashboard Power BI (4 pages)
+│
+├── visu_temp/
+│   └── visu.ipynb                         # Notebook exploratoire
+│
+├── app.py
+├── requirements.txt
+└── .gitignore
+```
 
-recommendations
+---
 
-Production de :
+## Pipeline de données
 
-data/cleaned/games_clean.csv
-data/cleaned/games_clean_sql.csv
-data/cleaned/games_clean.parquet
+### 1. Extract
 
-3️⃣ Load
+- **Source** : [Steam Games Dataset — Kaggle](https://www.kaggle.com/datasets/fronkongames/steam-games-dataset/data)
+- Téléchargement manuel, stocké dans `data/raw/` (non versionné)
 
-Import dans PostgreSQL effectué manuellement via pgAdmin à partir de :
+### 2. Transform — `scripts/transform_v2.py`
 
-games_clean_sql.csv
+- Nettoyage des valeurs manquantes et suppression des incohérences
+- Corrections ciblées sur les langues (`fix_language.py`) et les éditeurs (`fix_publishers.py`)
+- Création des variables analytiques :
+  - `positive_ratio` — ratio d'avis positifs
+  - `peak_ccu` — pic de joueurs simultanés
+  - `playtime` — temps de jeu moyen
+  - `recommendations` — nombre de recommandations
+- Export dans `data/cleaned/` (Parquet) et `data/cleaned_csv/` (CSV PostgreSQL-ready)
 
+### 3. Load — `sql/`
 
-La base sert ensuite à :
+- Création du schéma via `create_schema_v1.sql`
+- Import des CSV dans PostgreSQL via pgAdmin
+- Correctifs post-import appliqués en SQL (`fix_language.sql`, `fix_publishers.sql`)
+- Chargement des dimensions et tables de liaison via `load_dims_and_bridges_v1.sql`
 
-Analyse SQL
+---
 
-Visualisation Power BI
+## Modélisation SQL
 
-🛠 Stack technique
+Le dossier `sql/` contient l'ensemble des scripts de structuration et d'alimentation de la base de données :
 
-Python (Pandas / NumPy)
+| Script | Rôle |
+|--------|------|
+| `create_schema_v1.sql` | Définition du schéma relationnel (tables, types, contraintes) |
+| `fix_language.sql` | Nettoyage et normalisation des langues en base |
+| `fix_publishers.sql` | Nettoyage et normalisation des éditeurs en base |
+| `load_dims_and_bridges_v1.sql` | Chargement des tables de dimensions et de liaison |
+| `load_fix_publishers.sql` | Correctif appliqué après chargement des éditeurs |
 
-PostgreSQL
+---
 
-Power BI
+## Dashboard Power BI
 
-Scikit-learn
+Le fichier `power_bi/analyse_steam_v2.pbix` contient 4 pages interactives, filtrables par année (1997–2025), genre et catégorie :
 
-Git
+| Page | Contenu |
+|------|---------|
+| **Marché actuel** | Vue d'ensemble — 101K jeux, taux de succès global 8,73 %, top 10 studios |
+| **Dynamique du succès** | Évolution des sorties 2013-2025, +3 191 % de jeux publiés |
+| **Facteurs du succès** | Taux de succès par genre, catégorie, langue et plateforme |
+| **Validation analytique** | Comparaison métriques clés — jeux à succès vs échec |
 
-📊 Méthodologie analytique
+---
 
-Le projet repose sur :
+## Installation
 
-Analyse des indicateurs clés
+```bash
+# Cloner le dépôt
+git clone https://github.com/DPewpew/<nom-du-repo>
+cd <nom-du-repo>
 
-Définition d’un seuil de succès
+# Installer les dépendances Python
+pip install -r requirements.txt
 
-Modèle ML explicatif (validation des corrélations)
+# Télécharger les données brutes sur Kaggle et les placer dans data/raw/
+# https://www.kaggle.com/datasets/fronkongames/steam-games-dataset/data
 
-Le modèle n’est pas prédictif avant sortie.
-Il sert à confirmer les résultats de l’analyse descriptive.
+# Lancer la transformation
+python scripts/transform_v2.py
 
-⚠️ Remarques techniques
+# Préparer l'export PostgreSQL
+python scripts/export_postgres_ready_v2.py
 
-Les données brutes ne sont pas versionnées (taille importante)
+# Créer le schéma en base (pgAdmin ou psql)
+# psql -U <user> -d <database> -f sql/create_schema_v1.sql
+```
 
-L’import en base est réalisé manuellement
+---
 
-Le projet se concentre sur l’analyse et la structuration des données
+## Stack technique
+
+| Catégorie | Outils |
+|-----------|--------|
+| Traitement données | Python, Pandas, NumPy |
+| Base de données | PostgreSQL, pgAdmin |
+| Visualisation | Power BI, Jupyter |
+| Machine Learning | Scikit-learn |
+| Versioning | Git |
+
+---
+
+## Remarques techniques
+
+- Les données brutes ne sont pas versionnées (volume trop important) — téléchargement manuel requis
+- L'import initial en base PostgreSQL est réalisé manuellement via pgAdmin
+- Les scripts en v1/v2 reflètent l'évolution du pipeline — la **v2 est la version finale** utilisée pour l'analyse
