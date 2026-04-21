@@ -56,7 +56,7 @@ def main():
 
     # 3) Rule 2 — Estimated owners numeric (milieu)
     df["estimated_owners_numeric"] = df["estimated_owners"].apply(owners_mid_to_int).astype("Int64")
-
+    
     # 4) Rule 3 — positive_ratio = NULL si pas d’avis
     # (NULL -> NaN/NA côté pandas)
     pos = pd.to_numeric(df.get("positive", 0), errors="coerce").fillna(0).astype("int64")
@@ -78,8 +78,12 @@ def main():
 
     # (Optionnel mais utile) Convert appid to int
     df["appid"] = pd.to_numeric(df["appid"], errors="coerce").astype("Int64")
+    
+    
+    # 7) Rule 6 — Colonnes tag
+    df["Genres"] = df["genres"]
 
-    # 7) Sorties clean (Parquet + CSV)
+    # 8) Sorties clean (Parquet + CSV)
     # On garde release_date originale + une date propre (release_date_dt)
     parquet_path = OUT_DIR / "games_clean.parquet"
     csv_path = OUT_DIR / "games_clean.csv"
@@ -99,7 +103,7 @@ def main():
     df.drop(columns=["tags"], inplace=True)
 
     # (recommandé) si tu ne veux pas stocker les listes en parquet/CSV :
-    drop_nested = ["categories", "genres", "developers", "publishers", "packages", "screenshots", "movies", "supported_languages", "full_audio_languages"]
+    drop_nested = ["categories", "genres", "developers", "packages", "screenshots", "movies", "supported_languages", "full_audio_languages"]
     df.drop(columns=[c for c in drop_nested if c in df.columns], inplace=True)
 
 

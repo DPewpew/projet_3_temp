@@ -6,26 +6,33 @@ venv/
 .venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # =========================
-# TOUTES LES DONNÉES
+# DONNÉES (NON VERSIONNÉES)
 # =========================
-data/
-
+raw/
+cleaned/
+cleaned_csv/
+*.csv
+*.parquet
+*.json
 
 # =========================
 # NOTEBOOK TEMP
 # =========================
 visu_temp/
+*.ipynb
 
 # =========================
-# FICHIERS SECRETS
+# VARIABLES D'ENVIRONNEMENT
 # =========================
 .env
 .env.*
 
 # =========================
-# SYSTEME
+# FICHIERS SYSTÈME
 # =========================
 .DS_Store
 Thumbs.db
