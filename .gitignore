@@ -12,18 +12,19 @@ __pycache__/
 # =========================
 # DONNÉES (NON VERSIONNÉES)
 # =========================
-raw/
-cleaned/
-cleaned_csv/
+data/raw/
+data/cleaned/
+data/cleaned_csv/
 *.csv
 *.parquet
 *.json
 
 # =========================
-# NOTEBOOK TEMP
+# NOTEBOOKS TEMPORAIRES
 # =========================
-visu_temp/
-*.ipynb
+# Garder visu_temp/visu.ipynb si tu veux le versionner,
+# sinon décommenter la ligne ci-dessous
+# visu_temp/
 
 # =========================
 # VARIABLES D'ENVIRONNEMENT
